@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+	<script type="text/javascript" src="obj.js"></script>
+	<meta charset="UTF-8">
+	<title>
+		Img Processing
+	</title>
+	<style type="text/css">
+		html,body{
+			height:100%;
+			margin: 0;
+			padding: 0;
+			width: 100%;
+		}
+		hr{
+			margin: 0;padding: 0;
+		}
+		
+		.right{
+			height: 100vh;
+			float: right;
+			width: 198px;
+			background-color: #e2e2e2;
+			border:1px solid black;
+
+		}
+		.active{
+			color:red;
+			font-size: 16;
+		}
+		.inside-draw{
+			width: 100%;
+			height: 15vh;
+			display: block;
+		}
+		.ins-draw-all{
+			height: 18px;width: 55px;
+			float: left;
+			margin: 10px;
+			text-align: center;	
+		}
+		.ins-effect-all{
+			height: 18px;width: 55px;
+			float: left;
+			margin: 10px;
+			text-align: center;	
+			overflow: auto;
+		}
+		
+		.betterLook{
+			background:linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+			height:50px;
+			text-align: center;
+			line-height: 50px;
+			margin: 0 auto;
+			border:1px solid white;
+		}
+
+		#hidden{
+			display: none;
+		}
+
+	</style>
+	<script type="text/javascript">
+		function colorChange(x){
+			Image1.color=x;			
+		}
+		function radiusChange(x){
+			if(x==1)Image1.radius+=1;
+			else{Image1.radius-=1;}			
+		}
+		function tellEffect(x){
+			Image1.effector=x;
+			Image1.effect();
+		}
+
+
+	</script>
+</head>
+<body>
+	<!-- <input type="file" id="img"> -->
+	<canvas id="canvas"></canvas>
+	<div class="right">
+		<div id="draw1">
+			<div class="betterLook" id="res"><i class="fa fa-arrows" id="resize"> Resize</i></div>
+			
+			<div class="betterLook" id=""><i class="fa fa-paint-brush" id="drw"> draw</i></div>
+					<div style="margin: 0 auto;width:80%">
+					<div class="inside-draw" style="height:190px" id="hidden">
+						<div class="ins-draw-all" style="background-color: red" onclick=colorChange('red')></div>
+						<div class="ins-draw-all" style="background-color: blue" onclick=colorChange('blue')></div>
+						<div class="ins-draw-all" style="background-color: green" onclick=colorChange('green')></div>
+						<div class="ins-draw-all" style="background-color: yellow" onclick=colorChange('yellow')></div>
+						<div class="ins-draw-all" style="background-color: lightblue" onclick=colorChange('lightblue')></div>
+						<div class="ins-draw-all" style="background-color: orange" onclick=colorChange('orange')></div>
+						<div class="ins-draw-all" style="background-color: black" onclick=colorChange('black')></div>
+						<div class="ins-draw-all" style="background-color: gray" onclick=colorChange('gray')></div>
+						<div class="ins-draw-all" style="background-color: white;text-align: center;" onclick=radiusChange(1)>+</div>
+						<div class="ins-draw-all" style="background-color: white;text-align: center;" onclick=radiusChange(2)>-</div>
+					</div>
+					</div>
+
+			<div class="betterLook" id=""><i class="fa fa-arrows" id="effect"> EFFECTS</i></div>
+				<div class="inside-draw" style="height:180px" id="hidden">
+					<div class="ins-effect-all" style="background-color: lightgray" onclick=tellEffect('light')>light</div>
+					<div class="ins-effect-all" style="background-color: lightgray" onclick=tellEffect('grayscale')>grayscale</div>
+					<div class="ins-effect-all" style="background-color: lightgray" onclick=tellEffect('crazy')>crazy</div>
+					<div class="ins-effect-all" style="background-color: lightgray" onclick=Image1.tryOuter()>Pencil Effect</div>
+					<div class="ins-effect-all" style="background-color: lightgray" onclick=Image1.sharpen()>Sharpen</div>
+					<div class="ins-effect-all" style="background-color: lightgray" onclick=Image1.smooth()>Smooth</div>
+					<div class="ins-effect-all" style="background-color: lightgray" onclick=tellEffect()></div>
+					<div class="ins-effect-all" style="background-color: lightgray" onclick=tellEffect()></div>
+				</div>
+			<div class="betterLook" id=""><i class="fa fa-text-height" id="resize">  Text</i></div>
+
+			<div class="betterLook" id=""><i class="fa fa-area-chart" id="clear">  clear</i></div>
+
+
+		</div>
+		
+
+	</div>
+
+	<script type="text/javascript">
+		//---------------------------------------------- canvas property---------------------------------------------------------------------
+		var canvas=document.getElementById('canvas'),
+			c=canvas.getContext('2d');
+			canvas.width=window.innerWidth-200;
+			canvas.height=window.innerHeight;
+
+		//----------------------------------------------my object initiate---------------------------------------------------------------------
+		var Image1=new Imag();
+		var img=new Image();
+		img.crossOrigin='*';
+		var whattodo=(window.location).toString();
+		if(whattodo.search('#')>0)
+		var hereIsImg=whattodo.slice(whattodo.search('#')+1,whattodo.len);
+		else hereIsImg="";
+		Image1.addImage(`${hereIsImg}.jpg`,c);
+
+		
+	
+		
+		//----------------------------------------------objects functions---------------------------------------------------------------------
+
+
+		//----------------------------------------------resize
+		document.getElementById('res').addEventListener('click',function(e){
+			tempres=document.getElementById('res').className;
+			if(!tempres)tempres+=" active";
+			else{tempres+="";}
+			Image1.resize();
+			});
+
+		//----------------------------------------------draw
+		document.getElementById('drw').addEventListener('click',function(){
+			var tempnoware=document.getElementsByClassName('inside-draw')[0].id;
+			if (event.target.id=="drw" && !tempnoware==""){
+					document.getElementsByClassName('inside-draw')[0].id="";
+			}else{
+				document.getElementsByClassName('inside-draw')[0].id="hidden";
+			}
+			Image1.drawPoints();
+			});
+
+		//----------------------------------------------effects
+
+		document.getElementById('effect').addEventListener('click',function(e){
+			var tempforeffect=document.getElementsByClassName('inside-draw')[1].id;
+			if (event.target.id=="effect" && !tempforeffect==""){
+					document.getElementsByClassName('inside-draw')[1].id="";
+			}else{
+				document.getElementsByClassName('inside-draw')[1].id="hidden";
+			}
+
+			
+		});
+
+		//----------------------------------------------clear all
+		document.getElementById('clear').onclick=function(){
+			window.location.reload("file:///Users/Aman/Desktop/img%20process/imageProcessing.html#aa");
+			};
+
+		//---------------------------------------------- sharpen
+
+	</script>
+
+<script type="text/javascript"></script>
+
+</body>
+</html>
